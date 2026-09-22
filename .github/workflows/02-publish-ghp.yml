@@ -1,0 +1,38 @@
+# .github/workflows/02-publish-ghp.yml
+name: Build and Publish to GitHub Packages
+
+on: push
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK and Maven auth
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          # this auto-generates settings.xml wired to GITHUB_TOKEN
+          # for a server whose id is "github" — must match pom.xml's <id>
+          server-id: github
+
+      - name: Compile
+        run: mvn compile --batch-mode
+
+      - name: Package JAR
+        run: mvn package --batch-mode
+
+      - name: Verify JAR was created
+        run: ls -lh target/*.jar
+
+      - name: Deploy to GitHub Packages
+        run: mvn deploy --batch-mode -DskipTests
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
