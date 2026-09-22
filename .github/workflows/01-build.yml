@@ -1,0 +1,38 @@
+# .github/workflows/01-build.yml
+name: Build Artifact
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Validate project structure
+        run: mvn validate --batch-mode
+
+      - name: Compile source code
+        run: mvn compile --batch-mode
+
+      - name: Run tests
+        run: mvn test --batch-mode
+
+      - name: Package into JAR
+        run: mvn package --batch-mode
+
+      - name: Show the generated artifact
+        run: ls -lh target/*.jar
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/app-1.0.0.jar
