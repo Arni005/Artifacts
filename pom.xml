@@ -38,7 +38,7 @@
       <id>github</id>
       <name>GitHub Packages</name>
       <!-- Replace OWNER/REPO with your actual GitHub username/org and repo name -->
-      <url>https://maven.pkg.github.com/OWNER/REPO</url>
+      <url>https://maven.pkg.github.com/Arni005/Artifacts</url>
     </repository>
   </distributionManagement>
 
